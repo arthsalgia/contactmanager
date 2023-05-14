@@ -2,9 +2,8 @@ import sqlite3
 
 # addContact stores (name and phoneNum) to the SQlite file
 # returns False if user already exists else True
+
 def addContact(name, phoneNum, conn):
-    # try to save name, phoneNum in sqlite file
-    # if success, return true else false
     cursor = conn.cursor()
     cursor.execute("insert into numbers (name, number) values ('" + name + "','" +  phoneNum + "')")
     conn.commit()
@@ -24,12 +23,17 @@ def updatename (name, number, conn):
 
 def searchname (name, conn):
     cursor = conn.cursor()
-    res = cursor.execute("select name, number from numbers where name = '" +name+ "'")
+    res = cursor.execute("select name, number from numbers where name like '%" +name+ "%'")
+    return res.fetchall()
+
+def findname (name, conn):
+    cursor = conn.cursor()
+    res = cursor.execute("select  name from numbers where  upper('" + name + "') like upper(name)")
     return res.fetchone()
 
 def searchNumber (number, conn):
     cursor = conn.cursor()
-    res = cursor.execute("select name, number from numbers where number = '" + number+ "'")
+    res = cursor.execute("select name, number from numbers where number like '%" + number+ "%'")
     return res.fetchone()
 
 def selectAll (conn):
